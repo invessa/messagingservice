@@ -1,4 +1,4 @@
-package com.invessa.messaging.sms.vanso.exception;
+package com.invessa.messaging.sms.providers.vanso.exception;
 
 import lombok.*;
 

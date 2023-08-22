@@ -1,10 +1,10 @@
 package com.invessa.messaging.sms.service;
 
+import com.invessa.messaging.sms.providers.vanso.dto.SMSData;
 import com.invessa.messaging.sms.request.SMSRequest;
 import com.invessa.messaging.sms.response.ErrorResponse;
-import com.invessa.messaging.sms.vanso.request.VansoSMSRequest;
-import com.invessa.messaging.sms.response.MessageResponse;
-import com.invessa.messaging.sms.vanso.service.VansoService;
+import com.invessa.messaging.sms.providers.vanso.request.VansoSMSRequest;
+import com.invessa.messaging.sms.providers.vanso.service.VansoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,9 +33,12 @@ public class SMSService {
         if (smsProvider.equals("vanso")) {
             log.info("In Vanso call");
             VansoSMSRequest vansoSMSRequest = new VansoSMSRequest();
-            vansoSMSRequest.setDest(smsRequest.getPhoneNumber());
-            vansoSMSRequest.setText(smsRequest.getSmsText());
-            vansoSMSRequest.setSrc("Invessa");
+            SMSData smsData = SMSData.builder()
+                            .dest(smsRequest.getPhone_number())
+                            .src("Invessa")
+                            .text(smsRequest.getSms_text())
+                            .build();
+            vansoSMSRequest.setSms(smsData);
             //MessageResponse messageResponse = VansoService.sendSMS(vansoSMSRequest);
             //return new ResponseEntity<>(messageResponse,HttpStatus.OK);
             return VansoService.sendSMS(vansoSMSRequest);

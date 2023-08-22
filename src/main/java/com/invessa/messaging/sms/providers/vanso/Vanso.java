@@ -1,4 +1,4 @@
-package com.invessa.messaging.sms.vanso;
+package com.invessa.messaging.sms.providers.vanso;
 
 import com.invessa.messaging.sms.interfaces.SMS;
 import com.invessa.messaging.sms.response.MessageResponse;

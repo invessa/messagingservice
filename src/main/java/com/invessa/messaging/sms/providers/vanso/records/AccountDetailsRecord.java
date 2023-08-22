@@ -1,4 +1,4 @@
-package com.invessa.messaging.sms.vanso.records;
+package com.invessa.messaging.sms.providers.vanso.records;
 
 import java.util.List;
 

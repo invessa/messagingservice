@@ -1,4 +1,4 @@
-package com.invessa.messaging.sms.vanso.properties;
+package com.invessa.messaging.sms.providers.vanso.properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

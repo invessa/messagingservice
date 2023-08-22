@@ -1,16 +1,16 @@
-package com.invessa.messaging.sms.vanso.service;
+package com.invessa.messaging.sms.providers.vanso.service;
 
+import com.invessa.messaging.sms.providers.vanso.exception.VansoRuntimeException;
+import com.invessa.messaging.sms.providers.vanso.properties.VansoProperties;
 import com.invessa.messaging.sms.response.ErrorResponse;
-import com.invessa.messaging.sms.vanso.exception.VansoRuntimeException;
-import com.invessa.messaging.sms.vanso.properties.VansoProperties;
-import com.invessa.messaging.sms.vanso.request.AccountDetailsRequest;
-import com.invessa.messaging.sms.vanso.request.BulkSMSRequest;
-import com.invessa.messaging.sms.vanso.request.DLRRequest;
-import com.invessa.messaging.sms.vanso.request.VansoSMSRequest;
-import com.invessa.messaging.sms.vanso.response.AccountDetailsResponse;
+import com.invessa.messaging.sms.providers.vanso.request.AccountDetailsRequest;
+import com.invessa.messaging.sms.providers.vanso.request.BulkSMSRequest;
+import com.invessa.messaging.sms.providers.vanso.request.DLRRequest;
+import com.invessa.messaging.sms.providers.vanso.request.VansoSMSRequest;
+import com.invessa.messaging.sms.providers.vanso.response.AccountDetailsResponse;
 import com.invessa.messaging.sms.response.MessageResponse;
-import com.invessa.messaging.sms.vanso.response.SMSResponse;
-import com.invessa.messaging.sms.vanso.response.VansoErrorResponse;
+import com.invessa.messaging.sms.providers.vanso.response.SMSResponse;
+import com.invessa.messaging.sms.providers.vanso.response.VansoErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

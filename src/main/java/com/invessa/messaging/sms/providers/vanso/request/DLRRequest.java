@@ -1,4 +1,4 @@
-package com.invessa.messaging.sms.vanso.request;
+package com.invessa.messaging.sms.providers.vanso.request;
 
 import lombok.Data;
 
