@@ -35,7 +35,7 @@ public class KafkaService {
     }
 
     public void sendNotificationMessage(NotificationRequest notificationRequest){
-        kafkaTemplate.send(KafkaConfig.NOTIFICATION_TOPIC,notificationRequest);
+        kafkaTemplate.send("smsTopic",notificationRequest);
     }
 
     // Annotation required to listen the

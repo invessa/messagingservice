@@ -3,7 +3,7 @@ package com.invessa.messaging.sms.controller;
 import com.invessa.messaging.sms.request.SMSRequest;
 import com.invessa.messaging.sms.service.SMSService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class SMSController {
 
+    @Autowired
+    SMSService smsService;
 
-    @PostMapping("/sms/send")
+    @PostMapping("/sms")
     public ResponseEntity<?>postSendSMS(@RequestBody SMSRequest smsRequest){
         log.info("In SMSController | postSendSMS");
-        return SMSService.sendSMS(smsRequest);
+        return smsService.sendSMS(smsRequest);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String>test(){
-        return new ResponseEntity<>("Ok",HttpStatus.OK);
-    }
 
 }

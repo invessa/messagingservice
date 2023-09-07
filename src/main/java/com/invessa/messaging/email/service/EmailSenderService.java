@@ -16,6 +16,7 @@ import com.invessa.messaging.response.MessageResponse;
 import com.invessa.messaging.sms.response.ErrorResponse;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -29,6 +30,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
+@Slf4j
 public class EmailSenderService {
     @Autowired
     private JavaMailSender emailSender;
@@ -110,6 +112,46 @@ public class EmailSenderService {
         }
         Map<String,String> info = new HashMap<>();
         return new ResponseEntity<>(new MessageResponse("00","success","Email Sent", info),HttpStatus.OK);
+    }
+
+    public boolean sendCustomerRegistrationConfirmationEmail(EmailRequest emailRequest){
+        log.info("In EmailSenderService || sendCustomerRegistrationConfirmationEmail");
+        try{
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+            String emailSubject = "";
+            String emailTemplate = "";
+            String emailType = emailRequest.getEmail_type().toString();
+            if(emailType.equals("REGISTRATION")){
+                emailSubject = "Finish your registration";
+                emailTemplate = "registration.html";
+            }else if(emailType.equals("CONFIRMATION")){
+                emailSubject = "Welcome to Invessa";
+                emailTemplate = "confirmation.html";
+            }
+            log.info("Building email parameters and body");
+            helper.setTo(emailRequest.getTo_address());
+            helper.setSubject(emailSubject);
+            helper.setFrom(new InternetAddress(fromMailAddress,fromMailName));
+
+            final Context context = new Context(LocaleContextHolder.getLocale());
+            context.setVariable("email",emailRequest.getTo_address());
+            context.setVariable("subject",emailSubject);
+            context.setVariable("name", emailRequest.getFirst_name()+" "+emailRequest.getLast_name());
+            final String htmlContent = templateEngine.process(emailTemplate, context);
+            helper.setText(htmlContent,true);
+            log.info("email parameters and body  built");
+            log.info("Sending Email");
+            emailSender.send(message);
+            log.info(">> Email Sent");
+        }catch (jakarta.mail.MessagingException | UnsupportedEncodingException me){
+            errorList.add(me.getMessage());
+            error.put("error: ",errorList);
+            return false;
+        }
+        return true;
     }
 
 }
