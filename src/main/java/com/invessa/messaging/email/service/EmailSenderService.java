@@ -1,5 +1,7 @@
 package com.invessa.messaging.email.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.invessa.messaging.email.model.Mail;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -12,6 +14,7 @@ import java.util.Map;
 import javax.mail.MessagingException;
 
 import com.invessa.messaging.email.request.EmailRequest;
+import com.invessa.messaging.request.NotificationRequest;
 import com.invessa.messaging.response.MessageResponse;
 import com.invessa.messaging.sms.response.ErrorResponse;
 import jakarta.mail.internet.InternetAddress;
@@ -22,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -45,8 +49,24 @@ public class EmailSenderService {
 
     Map<String, List<String>> error = new HashMap<>();
     List<String> errorList = new ArrayList<>();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    public boolean sendEmail(NotificationRequest notificationRequest){
+        log.info("In EmailSenderService ||  sendEmail(NotificationRequest notificationRequest)");
+        log.info("NotificationRequest :: {}",gson.toJson(notificationRequest));
+        EmailRequest emailRequest = EmailRequest.builder()
+                .email_type(notificationRequest.getEmail_type())
+                .last_name(notificationRequest.getLast_name())
+                .first_name(notificationRequest.getFirst_name())
+                .to_address(notificationRequest.getEmail_address())
+                .build();
+        var respMsg = sendEmail(emailRequest);
+        return respMsg.getStatusCode().equals(HttpStatusCode.valueOf(200));
+    }
 
     public ResponseEntity<?>sendEmail(EmailRequest emailRequest){
+        log.info("In EmailSenderService ||  sendEmail(EmailRequest emailRequest)");
+        log.info("EmailRequest :: {}",gson.toJson(emailRequest));
         String emailType = emailRequest.getEmail_type().toString();
         if(emailType.equals("REGISTRATION") || emailType.equals("CONFIRMATION")){
             return sendRegistrationConfirmationEmail(emailRequest);
@@ -78,6 +98,7 @@ public class EmailSenderService {
     }
 
     private ResponseEntity<?> sendRegistrationConfirmationEmail(EmailRequest emailRequest){
+        log.info("In EmailSenderService ||  sendRegistrationConfirmationEmail");
         try{
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,
@@ -104,8 +125,12 @@ public class EmailSenderService {
             context.setVariable("name", emailRequest.getFirst_name()+" "+emailRequest.getLast_name());
             final String htmlContent = templateEngine.process(emailTemplate, context);
             helper.setText(htmlContent,true);
+            log.info("SENDING email");
             emailSender.send(message);
+            log.info("Email SENT");
         }catch (jakarta.mail.MessagingException | UnsupportedEncodingException me){
+            log.error("ERROR: Could not send email");
+            log.error("Error message :: {}",me.getMessage());
             errorList.add(me.getMessage());
             error.put("error: ",errorList);
             return new ResponseEntity<>(new ErrorResponse("31","failed","Failure sending email",error), HttpStatus.BAD_REQUEST);
