@@ -64,13 +64,15 @@ public class VansoService {
         } catch (RuntimeException exception) {
             //throw new VansoRuntimeException("21","failed", re.getMessage());
             log.error("Error in Vanso API Call || Error:: {}", "Server error");
+            log.error("ERROR:: "+exception.getMessage());
             Map<String, List<String>> errorInfo = new HashMap<>();
             List<String> errorList = new ArrayList<>();
             String[] errMsg = exception.getMessage().split("#");
-            errorList.add("errorCode: " + errMsg[0]);
-            errorList.add("errorMessage: " + errMsg[1]);
+            //errorList.add("errorCode: " + errMsg[0]);
+            //errorList.add("errorMessage: " + errMsg[1]);
+            errorList.add("error "+exception.getMessage());
             errorInfo.put("errors", errorList);
-            return new ResponseEntity<>(new ErrorResponse("21", "failed", errMsg[2], errorInfo), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponse("21", "failed", exception.getMessage(), errorInfo), HttpStatus.BAD_REQUEST);
             //return new ErrorResponse("21","failed", errMsg[2], errorInfo);
         }
         log.info("Calling Vanso API completed");

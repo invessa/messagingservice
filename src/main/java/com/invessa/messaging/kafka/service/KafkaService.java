@@ -8,35 +8,36 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import com.invessa.messaging.kafka.config.KafkaConfig;
 
+
 @Service
 public class KafkaService {
 
-    @Autowired
-    private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
-
-    @Autowired
-    private final ConsumerFactory<String, String> consumerFactory;
-
-    @Autowired
-    public KafkaService(KafkaTemplate<String, NotificationRequest> kafkaTemplate,
-                        ConsumerFactory<String, String> consumerFactory) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.consumerFactory = consumerFactory;
-    }
-
-    public void createTopic(String topicName) {
-        // Logic to create a new Kafka topic
-        // This implementation will depend on the version of Kafka you are using
-        // For Kafka 2.0 and above, you can use AdminClient to create topics.
-    }
-
-    public void sendMessage(String topicName, NotificationRequest notificationRequest) {
-        kafkaTemplate.send(topicName, notificationRequest);
-    }
-
-    public void sendNotificationMessage(NotificationRequest notificationRequest){
-        kafkaTemplate.send("smsTopic",notificationRequest);
-    }
+//    @Autowired
+//    private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
+//
+//    @Autowired
+//    private final ConsumerFactory<String, String> consumerFactory;
+//
+//    @Autowired
+//    public KafkaService(KafkaTemplate<String, NotificationRequest> kafkaTemplate,
+//                        ConsumerFactory<String, String> consumerFactory) {
+//        this.kafkaTemplate = kafkaTemplate;
+//        this.consumerFactory = consumerFactory;
+//    }
+//
+//    public void createTopic(String topicName) {
+//        // Logic to create a new Kafka topic
+//        // This implementation will depend on the version of Kafka you are using
+//        // For Kafka 2.0 and above, you can use AdminClient to create topics.
+//    }
+//
+//    public void sendMessage(String topicName, NotificationRequest notificationRequest) {
+//        kafkaTemplate.send(topicName, notificationRequest);
+//    }
+//
+//    public void sendNotificationMessage(NotificationRequest notificationRequest){
+//        kafkaTemplate.send("smsTopic",notificationRequest);
+//    }
 
     // Annotation required to listen the
     // message from kafka server
