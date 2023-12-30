@@ -3,8 +3,11 @@ package com.invessa.messaging.controller;
 import com.invessa.messaging.rabbitmq.RabbitMQProducer;
 import com.invessa.messaging.request.NotificationRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @Slf4j
 @RestController
@@ -29,6 +32,13 @@ public class MessagingController {
     public ResponseEntity<String> sendMessage(@RequestParam("message") String message){
         producer.sendMessage(message);
         return ResponseEntity.ok("Message sent to RabbitMQ ...");
+    }
+
+    @GetMapping(value="/check")
+    public ResponseEntity<?>getStatus(){
+        HashMap<String,String> respMsg = new HashMap<>();
+        respMsg.put("status","OK");
+        return new ResponseEntity<>(respMsg, HttpStatus.OK);
     }
 
 
